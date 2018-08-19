@@ -108,7 +108,11 @@ public class MovieSpider {
         String id = Arr.get(jo, "id");
         Optional<DoubanMovie> op = md.findById(id);
         if (op.isPresent()) {
-            this.saveTags(op.get());
+            DoubanMovie movie = op.get();
+            TagObject to = tod.findByFkAndTagId(movie.getId(), TAG_ID);
+            if (to == null) {
+                this.saveTags(movie);
+            }
             return;
         }
         DoubanMovie movie = new DoubanMovie();
