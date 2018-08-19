@@ -76,6 +76,14 @@ public class TagObject {
         this.updateTime = updateTime;
     }
 
+    public String getTagId() {
+        return tagId;
+    }
+
+    public void setTagId(String tagId) {
+        this.tagId = tagId;
+    }
+
     @Override
     public String toString() {
         return "TagObject{" +

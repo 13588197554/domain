@@ -11,4 +11,5 @@ public class DomainspiderApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DomainspiderApplication.class, args);
 	}
+
 }

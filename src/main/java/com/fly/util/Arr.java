@@ -18,7 +18,7 @@ public class Arr {
 
     public static String get(JSONObject jsonObject, String name, String value) {
         String attr = jsonObject.getString(name);
-        return attr == null ? value : attr;
+        return attr == null || "".equals(attr.trim()) ? value : attr;
     }
 
     /**

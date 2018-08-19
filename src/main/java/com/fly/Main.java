@@ -6,19 +6,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.fly.util.Arr;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import redis.clients.jedis.Jedis;
 
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        Connection.Response res = Jsoup
-                .connect("https://api.douban.com/v2/movie/search?tag=美国&start=100051")
-                .ignoreContentType(true)
-                .execute();
-        String body = res.body();
-        JSONObject jo = JSON.parseObject(body);
-        String subjects = Arr.get(jo, "subjects");
-        JSONArray objects = JSON.parseArray(subjects);
-        System.out.println(objects.size());
+        Jedis jedis = new Jedis("118.25.37.27", 6379);
+        jedis.auth("654328");
+        jedis.hget("", "");
     }
 }

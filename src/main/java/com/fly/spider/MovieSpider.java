@@ -29,7 +29,10 @@ public class MovieSpider {
 
     private static String baseUrl = Arr.getString(prop, "MOVIE_URL");
     private static String MOVIE_TAG = Arr.getString(prop, "MOVIE_TAG");
-    private static Integer count = 20;
+    private static Integer PAGE = Arr.getInteger(prop, "MOVIE_PAGE");
+    private static Integer COUNT = 20;
+    private static String TAG_ID = null;
+    private static String TAG_TYPE = "DOUBAN_MOVIE";
 
     @Autowired
     private MovieDao md;
@@ -43,11 +46,16 @@ public class MovieSpider {
     private MoviePersonDao mpd;
     @Autowired
     private MovieGenreDao mgd;
+    @Autowired
+    private TagDao td;
+    @Autowired
+    private TagObjectDao tod;
 
     public void start() throws InterruptedException {
-        int i = 0;
+        TAG_ID = td.findIdByNameAndType(MOVIE_TAG, TAG_TYPE);
+
         while (true) {
-            String url = baseUrl + "?tag=" + MOVIE_TAG + "&start=" + i * count;
+            String url = baseUrl + "?tag=" + MOVIE_TAG + "&start=" + PAGE * COUNT;
             System.out.println("processing url: " + url + ", -- process time: " + Util.getCurrentFormatTime());
             try {
                 Connection.Response res = Jsoup.connect(url)
@@ -69,8 +77,9 @@ public class MovieSpider {
                         LogUtil.info(MovieSpider.class, "start", e);
                     }
                 }
-                i++;
-                Util.getRandomSleep(32, 45);
+                PAGE++;
+                System.out.println("normally sleep: " + Util.getCurrentFormatTime());
+                Util.getRandomSleep(26, 35);
             } catch (HttpStatusException hse) {
                 hse.printStackTrace();
                 LogUtil.info(MovieSpider.class, "movieSpider", hse);
@@ -95,10 +104,11 @@ public class MovieSpider {
     }
 
     @Transactional
-    protected void movieSpider(JSONObject jo) throws InterruptedException {
+    protected void movieSpider(JSONObject jo) {
         String id = Arr.get(jo, "id");
         Optional<DoubanMovie> op = md.findById(id);
         if (op.isPresent()) {
+            this.saveTags(op.get());
             return;
         }
         DoubanMovie movie = new DoubanMovie();
@@ -107,6 +117,7 @@ public class MovieSpider {
         this.participantUnit(jo, "directors", movie);
         this.participantUnit(jo, "writers", movie);
         this.saveGenres(jo, movie);
+        this.saveTags(movie);
 
         System.out.println("process movie : " + movie.getTitle() + " -- process time: " + Util.getCurrentFormatTime());
     }
@@ -192,6 +203,7 @@ public class MovieSpider {
             DoubanGenre ge = gd.findByName(name);
             if (ge == null) {
                 ge = new DoubanGenre();
+                ge.setName(name);
                 ge.setCreateTime(Util.getCurrentFormatTime());
                 ge.setUpdateTime(Util.getCurrentFormatTime());
                 ge.setStatus(StatusEnum.ACTIVE.getName());
@@ -208,7 +220,18 @@ public class MovieSpider {
         }
     }
 
-    public List<JSONObject> getJsonArray(String body) {
+    private void saveTags(DoubanMovie movie) {
+        TagObject tagObject = new TagObject();
+        tagObject.setExtra("");
+        tagObject.setStatus(StatusEnum.ACTIVE.getName());
+        tagObject.setCreateTime(Util.getCurrentFormatTime());
+        tagObject.setUpdateTime(Util.getCurrentFormatTime());
+        tagObject.setFk(movie.getId());
+        tagObject.setTagId(TAG_ID);
+        tod.save(tagObject);
+    }
+
+    private List<JSONObject> getJsonArray(String body) {
         JSONObject jsonObject = JSON.parseObject(body);
         String subJson = Arr.get(jsonObject, "subjects");
         List<JSONObject> array = JSON.parseArray(subJson, JSONObject.class);

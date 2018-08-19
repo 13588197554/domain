@@ -1,4 +1,4 @@
-package java.com.fly;
+package com.fly;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

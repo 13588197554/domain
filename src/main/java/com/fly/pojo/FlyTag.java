@@ -1,25 +1,32 @@
 package com.fly.pojo;
 
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
-//@Entity
-//@Table(name = "tag")
+@Entity
+@Table(name = "tag")
 public class FlyTag implements Serializable {
 
     @Id
     private String id;
-//    @Column(name = "tag_name")
+    @Column(name = "tag_name")
+    @JsonProperty("tag_name")
     private String tagName;
-//    @Column(name = "pid")
+    @Column(name = "pid")
+    @JsonProperty("pid")
     private String pid;
-//    @Column(name = "tag_type")
+    @Column(name = "tag_type")
+    @JsonProperty("tag_type")
     private String tagType;
     private String status;
-//    @Column(name = "create_time")
+
+    @Transient
     private Timestamp createTime;
-//    @Column(name = "create_time")
+    @Transient
     private Timestamp updateTime;
 
     public String getId() {
