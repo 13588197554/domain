@@ -29,7 +29,8 @@ public class MovieSpider {
 
     private static String baseUrl = Arr.getString(prop, "MOVIE_URL");
     private static String MOVIE_TAG = Arr.getString(prop, "MOVIE_TAG");
-    private static Integer PAGE = Arr.getInteger(prop, "MOVIE_PAGE");
+//    private static Integer PAGE = Arr.getInteger(prop, "MOVIE_PAGE");
+    private static Integer PAGE = 10;
     private static Integer COUNT = 20;
     private static String TAG_ID = null;
     private static String TAG_TYPE = "DOUBAN_MOVIE";

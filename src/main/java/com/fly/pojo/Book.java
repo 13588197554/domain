@@ -1,15 +1,13 @@
 package com.fly.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "douban_book")
-@JsonIgnoreProperties({"createTime", "updateTime", "status", "extra"})
 public class Book implements Serializable {
 
     @Id
@@ -22,6 +20,8 @@ public class Book implements Serializable {
     @Column(name = "origin_work_name")
     private String originWorkName;
     private String translator;
+    @Column(columnDefinition = "TEXT")
+    private String category;
     @Column(name = "publish_time")
     private String publishTime;
     @Column(name = "page_count")
@@ -32,6 +32,7 @@ public class Book implements Serializable {
     private String imageUrl;
     private String stars;
     private String intro;
+    @Column(columnDefinition = "TEXT")
     private String extra;
     private String status;
     @Column(name = "create_time")
@@ -39,12 +40,11 @@ public class Book implements Serializable {
     @Column(name = "update_time")
     private String updateTime;
 
-//    @ManyToOne(fetch = FetchType.LAZY, targetEntity = FlyTag.class)
-    @Transient
-    private FlyTag tag;
+    private int spider;
 
-    @Transient
-    private List<BookShortComment> comments = new ArrayList<>();
+//    @ManyToOne(fetch = FetchType.LAZY, targetEntity = FlyTag.class)
+//    @Transient
+//    private FlyTag tag;
 
     public String getId() {
         return id;
@@ -190,43 +190,44 @@ public class Book implements Serializable {
         this.extra = extra;
     }
 
-    public FlyTag getTag() {
-        return tag;
+    public int getSpider() {
+        return spider;
     }
 
-    public void setTag(FlyTag tag) {
-        this.tag = tag;
+    public void setSpider(int spider) {
+        this.spider = spider;
     }
 
-    public List<BookShortComment> getComments() {
-        return comments;
+    public String getCategory() {
+        return category;
     }
 
-    public void setComments(List<BookShortComment> comments) {
-        this.comments = comments;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     @Override
     public String toString() {
-        return "Book{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", author='" + author + '\'' +
-                ", publisher='" + publisher + '\'' +
-                ", originWorkName='" + originWorkName + '\'' +
-                ", translator='" + translator + '\'' +
-                ", publishTime='" + publishTime + '\'' +
-                ", pageCount='" + pageCount + '\'' +
-                ", imageUrl='" + imageUrl + '\'' +
-                ", tagId='" + tagId + '\'' +
-                ", binding='" + binding + '\'' +
-                ", price='" + price + '\'' +
-                ", stars='" + stars + '\'' +
-                ", intro='" + intro + '\'' +
-                ", extra='" + extra + '\'' +
-                ", status='" + status + '\'' +
-                ", createTime='" + createTime + '\'' +
-                ", updateTime='" + updateTime + '\'' +
+        return "{" +
+                "id=\"" + id + "\"" +
+                ", name=\"" + name + "\"" +
+                ", author=\"" + author + "\"" +
+                ", publisher=\"" + publisher + "\"" +
+                ", originWorkName=\"" + originWorkName + "\"" +
+                ", translator=\"" + translator + "\"" +
+                ", publishTime=\"" + publishTime + "\"" +
+                ", pageCount=\"" + pageCount + "\"" +
+                ", imageUrl=\"" + imageUrl + "\"" +
+                ", category=\"" + category + "\"" +
+                ", tagId=\"" + tagId + "\"" +
+                ", binding=\"" + binding + "\"" +
+                ", price=\"" + price + "\"" +
+                ", stars=\"" + stars + "\"" +
+                ", intro=\"" + intro + "\"" +
+                ", extra=\"" + extra + "\"" +
+                ", status=\"" + status + "\"" +
+                ", createTime=\"" + createTime + "\"" +
+                ", updateTime=\"" + updateTime + "\"" +
                 '}';
     }
 }
