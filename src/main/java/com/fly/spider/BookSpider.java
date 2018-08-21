@@ -13,6 +13,7 @@ import com.fly.pojo.DoubanTag;
 import com.fly.pojo.TagObject;
 import com.fly.util.Arr;
 import com.fly.util.LogUtil;
+import com.fly.util.RedisUtil;
 import com.fly.util.Util;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
@@ -41,7 +42,7 @@ public class BookSpider {
     @Autowired
     private ImageDao id;
     @Autowired
-    private Jedis jedis;
+    private RedisUtil jedis;
 
     private static String TAG_MAP = "DOUBAN_TAG_MAP";
     private static Integer startId = 1000224;

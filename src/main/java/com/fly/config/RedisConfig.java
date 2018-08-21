@@ -24,12 +24,6 @@ public class RedisConfig {
         factory.setHostName(Arr.getString(prop, "REDIS_HOST"));
         factory.setPassword(Arr.getString(prop, "REDIS_PASSWORD"));
         factory.setPort(Arr.getInteger(prop, "REDIS_PORT"));
-//        JedisPoolConfig config = new JedisPoolConfig();
-//        config.setMaxIdle(20);
-//        config.setMaxWaitMillis(30 * 1000);
-//        config.setTestOnBorrow(true);
-//        config.setTestOnReturn(true);
-//        factory.setPoolConfig();
         factory.setUsePool(true);
         return factory;
     }

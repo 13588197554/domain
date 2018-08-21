@@ -53,6 +53,7 @@ public class MovieSpider {
     private TagObjectDao tod;
 
     public void start() throws InterruptedException {
+
         TAG_ID = td.findIdByNameAndType(MOVIE_TAG, TAG_TYPE);
 
         while (true) {
