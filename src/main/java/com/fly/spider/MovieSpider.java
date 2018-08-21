@@ -29,8 +29,8 @@ public class MovieSpider {
 
     private static String baseUrl = Arr.getString(prop, "MOVIE_URL");
     private static String MOVIE_TAG = Arr.getString(prop, "MOVIE_TAG");
-//    private static Integer PAGE = Arr.getInteger(prop, "MOVIE_PAGE");
-    private static Integer PAGE = 10;
+    private static Integer PAGE = Arr.getInteger(prop, "MOVIE_PAGE");
+//    private static Integer PAGE = 10;
     private static Integer COUNT = 20;
     private static String TAG_ID = null;
     private static String TAG_TYPE = "DOUBAN_MOVIE";
@@ -86,16 +86,17 @@ public class MovieSpider {
                 LogUtil.info(MovieSpider.class, "movieSpider", hse);
 
                 if (400 == hse.getStatusCode()) {
-                    Util.getRandomSleep(15 * 60);
-                    return;
+                    Util.getRandomSleep(5 * 60);
+                    continue;
                 }
 
                 if (403 == hse.getStatusCode()) {
-                    Util.getRandomSleep(5 * 3600);
+                    Util.getRandomSleep(3 * 3600);
+                    continue;
                 }
 
                 if (404 == hse.getStatusCode()) {
-                    return;
+                    continue;
                 }
             } catch (IOException e) {
                 LogUtil.info(MovieSpider.class, "movieSpider", e);
