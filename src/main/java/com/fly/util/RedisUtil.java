@@ -92,4 +92,22 @@ public class RedisUtil {
         HashOperations<String, String, String> op = redis.opsForHash();
         return op.delete(key, field);
     }
+
+    public Boolean exists(String...key) {
+        for (String k : key) {
+            if (!redis.hasKey(k)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean hexists(String key, String...fields) {
+        for (String field : fields) {
+            if (!redis.opsForHash().hasKey(key, field)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

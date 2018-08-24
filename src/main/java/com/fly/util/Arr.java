@@ -21,6 +21,21 @@ public class Arr {
         return attr == null || "".equals(attr.trim()) ? value : attr;
     }
 
+    public static <T> T get(Map map, String key, Class<T> clazz) {
+        try {
+            T t = clazz.newInstance();
+            Object o = map.get(key);
+            if (clazz.isInstance(o)) {
+                return clazz.cast(o);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * 根据指定的key,从全局properties对象中获取value
      * @param p
@@ -89,9 +104,13 @@ public class Arr {
         return (Long) map.get(key);
     }
 
-//    public static<T> List<T> getString(InputParam inputParam, Class clazz) {
-//        Object body = inputParam.getBody();
-//
-//    }
+    public static <T> T get(InputParam inputParam, String key, Class<T> clazz) {
+        Map map = inputParam.getBody();
+        Object o = map.get(key);
+        if (clazz.isInstance(o)) {
+            return clazz.cast(o);
+        }
+        return null;
+    }
 
 }
