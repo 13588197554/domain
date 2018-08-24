@@ -83,7 +83,7 @@ public class BookSpider {
                         Book book = new Book();
                         this.bookUnit(book, jo);
                         this.imageUnit(book, jo);
-                        this.tagUnit(book, jo);
+                        this.tagUnit(book);
                     }
                 } catch (HttpStatusException hse) {
                     hse.printStackTrace();
@@ -132,7 +132,7 @@ public class BookSpider {
         }
     }
 
-    private void tagUnit(Book book, JSONObject jo) {
+    private void tagUnit(Book book) {
         TagObject to = tod.findByFkAndTagId(book.getId(), TAG_ID);
         if (to == null) {
             to = new TagObject();
@@ -150,6 +150,7 @@ public class BookSpider {
         String id = Arr.get(jo, "id", String.class);
         Optional<Book> op = bd.findById(id);
         if (op.isPresent()) {
+            book = op.get();
             return;
         }
         book.setId(Arr.get(jo, "id"));
