@@ -80,8 +80,7 @@ public class BookSpider {
                     }
 
                     for (JSONObject jo : jsonArray) {
-                        Book book = new Book();
-                        this.bookUnit(book, jo);
+                        Book book = this.bookUnit(jo);
                         this.imageUnit(book, jo);
                         this.tagUnit(book);
                     }
@@ -132,27 +131,14 @@ public class BookSpider {
         }
     }
 
-    private void tagUnit(Book book) {
-        TagObject to = tod.findByFkAndTagId(book.getId(), TAG_ID);
-        if (to == null) {
-            to = new TagObject();
-            to.setFk(book.getId());
-            to.setTagId(TAG_ID);
-            to.setCreateTime(Util.getCurrentFormatTime());
-            to.setUpdateTime(Util.getCurrentFormatTime());
-            to.setExtra("");
-            to.setStatus("ACTIVE");
-            tod.save(to);
-        }
-    }
-
-    private void bookUnit(Book book, JSONObject jo) {
+    private Book bookUnit(JSONObject jo) {
         String id = Arr.get(jo, "id", String.class);
         Optional<Book> op = bd.findById(id);
         if (op.isPresent()) {
-            book = op.get();
-            return;
+            return op.get();
         }
+
+        Book book = new Book();
         book.setId(Arr.get(jo, "id"));
         book.setName(Arr.get(jo, "title"));
         book.setOriginWorkName(Arr.get(jo, "orign_title"));
@@ -177,6 +163,21 @@ public class BookSpider {
         book.setSpider(1);
         book.setExtra(jo.toString());
         bd.save(book);
+        return book;
+    }
+
+    private void tagUnit(Book book) {
+        TagObject to = tod.findByFkAndTagId(book.getId(), TAG_ID);
+        if (to == null) {
+            to = new TagObject();
+            to.setFk(book.getId());
+            to.setTagId(TAG_ID);
+            to.setCreateTime(Util.getCurrentFormatTime());
+            to.setUpdateTime(Util.getCurrentFormatTime());
+            to.setExtra("");
+            to.setStatus("ACTIVE");
+            tod.save(to);
+        }
     }
 
     private List<JSONObject> getJsonArray(String body) {
