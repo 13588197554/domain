@@ -59,6 +59,10 @@ public class RedisUtil {
         return redis.opsForList().range(key, start, end);
     }
 
+    public Long llen(String key) {
+        return redis.opsForList().size(key);
+    }
+
     public Long size(String key) {
         return redis.opsForList().size(key);
     }

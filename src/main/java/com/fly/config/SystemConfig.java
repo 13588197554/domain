@@ -15,7 +15,7 @@ import java.util.Properties;
 public class SystemConfig {
 
     public static Properties global = new Properties();
-    public static String configUrl = "http://118.25.37.27:1225/system/application.html";
+    public static String configUrl = "http://image.hasyou.cn/system/";
 
     static {
         try {

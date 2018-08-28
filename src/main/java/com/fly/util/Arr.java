@@ -2,6 +2,7 @@ package com.fly.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fly.pojo.vo.InputParam;
+import com.google.gson.JsonObject;
 
 import java.util.Map;
 import java.util.Properties;
@@ -25,6 +26,25 @@ public class Arr {
         try {
             T t = clazz.newInstance();
             Object o = map.get(key);
+            if (clazz.isInstance(o)) {
+                return clazz.cast(o);
+            }
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static <T> T get(Map map, String key, Object defaultValue, Class<T> clazz) {
+        try {
+            T t = clazz.newInstance();
+            Object o = map.get(key);
+            if (o == null) {
+                o = defaultValue;
+            }
+
             if (clazz.isInstance(o)) {
                 return clazz.cast(o);
             }
@@ -107,6 +127,18 @@ public class Arr {
     public static <T> T get(InputParam inputParam, String key, Class<T> clazz) {
         Map map = inputParam.getBody();
         Object o = map.get(key);
+        if (clazz.isInstance(o)) {
+            return clazz.cast(o);
+        }
+        return null;
+    }
+
+    public static <T> T get(InputParam inputParam, String key, Object defaultValue, Class<T> clazz) {
+        Map map = inputParam.getBody();
+        Object o = map.get(key);
+        if (o == null) {
+            o = defaultValue;
+        }
         if (clazz.isInstance(o)) {
             return clazz.cast(o);
         }

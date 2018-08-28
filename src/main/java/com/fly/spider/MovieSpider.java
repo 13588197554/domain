@@ -112,8 +112,8 @@ public class MovieSpider {
         Optional<DoubanMovie> op = md.findById(id);
         if (op.isPresent()) {
             DoubanMovie movie = op.get();
-            TagObject to = tod.findByFkAndTagId(movie.getId(), TAG_ID);
-            if (to == null) {
+            List<TagObject> tos = tod.findByFkAndTagId(movie.getId(), TAG_ID);
+            if (tos.size() == 0) {
                 this.saveTags(movie);
             }
             return;
@@ -215,7 +215,6 @@ public class MovieSpider {
                 ge.setUpdateTime(Util.getCurrentFormatTime());
                 ge.setStatus(StatusEnum.ACTIVE.getName());
                 ge = gd.save(ge);
-
              }
 
             DoubanMovieGenre movieGenre = new DoubanMovieGenre();

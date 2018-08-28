@@ -57,9 +57,16 @@ public class BookSpider {
                 break;
             }
 
+            boolean flag = true;
             String tagName = jedis.lpop(BOOK_TAG);
-            TAG_ID = jedis.hget(TAG_MAP, tagName);
             Integer start = 0;
+            TAG_ID = jedis.hget(TAG_MAP, tagName);
+
+            if (flag) {
+                tagName = "名著";
+                start = 4400;
+            }
+
             while (true) {
                 String url = baseUrl + tagName + "&start=" + start;
                 System.out.println("processing url : " + url + " -- process time: " + Util.getCurrentFormatTime());
@@ -75,6 +82,7 @@ public class BookSpider {
 
                     List<JSONObject> jsonArray = getJsonArray(body);
                     if (jsonArray.size() == 0) {
+                        flag = false;
                         System.out.println("job has finished");
                         break;
                     }
@@ -84,11 +92,12 @@ public class BookSpider {
                         this.imageUnit(book, jo);
                         this.tagUnit(book);
                     }
+                    start += 20;
                 } catch (HttpStatusException hse) {
                     hse.printStackTrace();
                     LogUtil.info(Book.class, "bookSpider", hse);
                     if (400 == hse.getStatusCode()) {
-                        Util.getRandomSleep(5 * 60);
+                        Util.getRandomSleep(15 * 60);
                         continue;
                     }
 
@@ -98,7 +107,8 @@ public class BookSpider {
                     }
 
                     if (404 == hse.getStatusCode()) {
-                        continue;
+                        start += 20;
+                        break;
                     }
                 } catch (IOException e) {
                     LogUtil.info(BookSpider.class, "bookSpider", e);
@@ -107,18 +117,18 @@ public class BookSpider {
                     LogUtil.info(BookSpider.class, "bookSpider", e);
                     e.printStackTrace();
                 } finally {
-                    start += 20;
                     System.out.println("normally sleeping: " + Util.getCurrentFormatTime());
-                    Util.getRandomSleep(25, 45);
+                    Util.getRandomSleep(35, 45);
                 }
             }
+            flag = false;
         }
     }
 
     private void imageUnit(Book book, JSONObject jo) {
-        DoubanImage image = id.findByFk(book.getId());
-        if (image == null) {
-            image = new DoubanImage();
+        List<DoubanImage> images = id.findByFk(book.getId());
+        if (images.size() == 0) {
+            DoubanImage image = new DoubanImage();
             String imageJson = Arr.get(jo, "images");
             JSONObject imageJsonO = JSON.parseObject(imageJson);
             image.setFk(book.getId());
@@ -167,9 +177,9 @@ public class BookSpider {
     }
 
     private void tagUnit(Book book) {
-        TagObject to = tod.findByFkAndTagId(book.getId(), TAG_ID);
-        if (to == null) {
-            to = new TagObject();
+        List<TagObject> tos = tod.findByFkAndTagId(book.getId(), TAG_ID);
+        if (tos.size() == 0) {
+            TagObject to = new TagObject();
             to.setFk(book.getId());
             to.setTagId(TAG_ID);
             to.setCreateTime(Util.getCurrentFormatTime());
