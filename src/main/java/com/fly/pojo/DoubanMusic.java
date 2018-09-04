@@ -32,10 +32,17 @@ public class DoubanMusic {
     private String pubdate;
     private String aka;
     private String media;
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String tracks;
     private String discs;
     @Column(columnDefinition = "MEDIUMTEXT")
     private String extra;
+    @Column(name = "create_time", length = 24)
+    @JsonProperty("create_time")
+    private String createTime;
+    @Column(name = "update_time", length = 24)
+    @JsonProperty("update_time")
+    private String updateTime;
 
     public Integer getId() {
         return id;
@@ -171,6 +178,22 @@ public class DoubanMusic {
 
     public void setExtra(String extra) {
         this.extra = extra;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 
     @Override

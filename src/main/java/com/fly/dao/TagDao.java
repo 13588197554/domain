@@ -18,4 +18,7 @@ public interface TagDao extends JpaRepository<FlyTag, String> {
 
     @Query(value = "SELECT t.tag_name FROM tag t WHERE t.tag_type = :tag_type AND t.pid != 0", nativeQuery = true)
     List<String> findNameByTypeAndPid(@Param("tag_type") String douban_book);
+
+    @Query(value = "SELECT * FROM tag t WHERE t.tag_type = :tag_type AND t.pid != 0", nativeQuery = true)
+    List<FlyTag> findIdAndNameByType(@Param("tag_type") String douban_music);
 }

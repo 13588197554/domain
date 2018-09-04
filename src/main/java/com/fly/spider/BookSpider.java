@@ -57,15 +57,9 @@ public class BookSpider {
                 break;
             }
 
-            boolean flag = true;
             String tagName = jedis.lpop(BOOK_TAG);
             Integer start = 0;
             TAG_ID = jedis.hget(TAG_MAP, tagName);
-
-            if (flag) {
-                tagName = "名著";
-                start = 4400;
-            }
 
             while (true) {
                 String url = baseUrl + tagName + "&start=" + start;
@@ -82,7 +76,6 @@ public class BookSpider {
 
                     List<JSONObject> jsonArray = getJsonArray(body);
                     if (jsonArray.size() == 0) {
-                        flag = false;
                         System.out.println("job has finished");
                         break;
                     }
@@ -121,7 +114,6 @@ public class BookSpider {
                     Util.getRandomSleep(35, 45);
                 }
             }
-            flag = false;
         }
     }
 
