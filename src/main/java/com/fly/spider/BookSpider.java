@@ -42,7 +42,6 @@ public class BookSpider {
     @Autowired
     private RedisUtil jedis;
 
-
     private static String TAG_MAP = "DOUBAN_TAG_MAP";
     private static String BOOK_TAG = "BOOK_TAG";
     private static String baseUrl = "https://api.douban.com/v2/book/search?tag=";
