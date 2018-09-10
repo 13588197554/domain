@@ -47,13 +47,13 @@ public class BookInfoSpider {
         while (true) {
             Book book = null;
             Long startTime = Util.getCurrentTimestamp();
-            System.out.println("process book : " + book.getId() + " process time : " + Util.getCurrentFormatTime());
             try {
                 book = bd.findFirstInfoSpider();
                 if (book == null) {
                     System.out.println("job has finished!");
                     break;
                 }
+                System.out.println("process book : " + book.getId() + " process time : " + Util.getCurrentFormatTime());
                 this.bookInfoSpider(book);
             } catch (HttpStatusException hse) {
                 LogUtil.info(BookInfoSpider.class, "bookInfoSpider", hse);
@@ -110,6 +110,7 @@ public class BookInfoSpider {
         book.setBinding(binding);
         book.setIntro(intro);
         book.setOriginWorkName(originTitle);
+        book.setExtra(jo.toJSONString());
 
         List<DoubanImage> imageModel = imageDao.findByFk(id);
         if (imageModel.size() == 0) {
