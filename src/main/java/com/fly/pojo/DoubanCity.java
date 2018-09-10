@@ -20,14 +20,15 @@ import java.util.List;
 public class DoubanCity implements Serializable {
 
     @Id
-    private String id;
-    private String name;
+    private Integer id;
     @Column(name = "uid")
     private String uid;
+    private String name;
     private String parent;
+    private Integer pid;
     private String habitable;
     @Column(name = "is_event")
-    private int spider;
+    private Integer spider;
     private String status = "ACTIVE";
     @Column(name = "create_time")
     private String createTime;
@@ -39,11 +40,11 @@ public class DoubanCity implements Serializable {
     @Transient
     List<DoubanCity> cities = new ArrayList<>();
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -109,11 +110,11 @@ public class DoubanCity implements Serializable {
         this.status = status;
     }
 
-    public int getSpider() {
+    public Integer getSpider() {
         return spider;
     }
 
-    public void setSpider(int spider) {
+    public void setSpider(Integer spider) {
         this.spider = spider;
     }
 
@@ -131,6 +132,14 @@ public class DoubanCity implements Serializable {
 
     public void setCities(List<DoubanCity> cities) {
         this.cities = cities;
+    }
+
+    public Integer getPid() {
+        return pid;
+    }
+
+    public void setPid(Integer pid) {
+        this.pid = pid;
     }
 
     @Override

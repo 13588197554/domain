@@ -14,27 +14,27 @@ import javax.persistence.Table;
 public class DoubanDistrict {
 
     @Id
-    private String id;
-    private String pid;
+    private Integer id;
+    private Integer pid;
     private String name;
     @Column(name = "create_time")
     private String createTime = Util.getCurrentFormatTime();
     @Column(name = "update_time")
     private String updateTime = Util.getCurrentFormatTime();
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getPid() {
+    public Integer getPid() {
         return pid;
     }
 
-    public void setPid(String pid) {
+    public void setPid(Integer pid) {
         this.pid = pid;
     }
 
