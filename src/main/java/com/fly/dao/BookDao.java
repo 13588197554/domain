@@ -17,4 +17,8 @@ public interface BookDao extends JpaRepository<Book, String> {
     @Query(nativeQuery = true,
             value = "SELECT * FROM douban_book WHERE spider = 1 ORDER BY id ASC limit 1")
     Book findFirstInfoSpider();
+
+    @Query(nativeQuery = true,
+            value = "select * from douban_book where comment_spider = 0 order by id asc limit 1")
+    Book findFirstByCommentSpider();
 }

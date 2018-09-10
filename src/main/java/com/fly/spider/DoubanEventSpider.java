@@ -15,9 +15,10 @@ import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -44,6 +45,8 @@ public class DoubanEventSpider {
     private static String cityName = "上海";
     private static Integer locId = 108296;
 
+//    @Async
+//    @Scheduled(fixedDelay = 24 * 3600 * 1000)
     public void eventSpider() throws InterruptedException {
         String url0 = baseUrl + "?loc=" + locId + "&day_type=" + DAY_TYPE + "&type=" + TYPE;
         int start = 0;
@@ -54,7 +57,6 @@ public class DoubanEventSpider {
                 System.out.println("-- processing url: " + url + ", -- process time: " + Util.getCurrentFormatTime());
                 Connection connection = Jsoup.connect(url).ignoreContentType(true);
                 connection.userAgent("Mozilla/2.0 (compatible; Ask Jeeves/Teoma; +http://sp.ask.com/docs/about/tech_crawling.html)");
-                connection.header("Content-Type", "application/json;charset=UTF-8");
                 Connection.Response res = connection.execute();
                 String body = res.body();
                 JSONObject jo = JSON.parseObject(body);
@@ -63,6 +65,7 @@ public class DoubanEventSpider {
                 List<DoubanEvent> events = JSON.parseArray(eventJson, DoubanEvent.class);
                 if (events.size() <= 0) {
                     // no events
+                    System.out.println("job has finished!");
                     break;
                 }
 

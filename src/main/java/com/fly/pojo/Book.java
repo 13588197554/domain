@@ -41,6 +41,8 @@ public class Book implements Serializable {
     private String updateTime;
 
     private int spider;
+    @Column(name = "comment_spider")
+    private int commentSpider = 0;
 
 //    @ManyToOne(fetch = FetchType.LAZY, targetEntity = FlyTag.class)
 //    @Transient
@@ -204,6 +206,14 @@ public class Book implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public int getCommentSpider() {
+        return commentSpider;
+    }
+
+    public void setCommentSpider(int commentSpider) {
+        this.commentSpider = commentSpider;
     }
 
     @Override

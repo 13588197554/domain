@@ -23,35 +23,21 @@ public class Arr {
     }
 
     public static <T> T get(Map map, String key, Class<T> clazz) {
-        try {
-            T t = clazz.newInstance();
-            Object o = map.get(key);
-            if (clazz.isInstance(o)) {
-                return clazz.cast(o);
-            }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        Object o = map.get(key);
+        if (clazz.isInstance(o)) {
+            return clazz.cast(o);
         }
         return null;
     }
 
     public static <T> T get(Map map, String key, Object defaultValue, Class<T> clazz) {
-        try {
-            T t = clazz.newInstance();
-            Object o = map.get(key);
-            if (o == null) {
-                o = defaultValue;
-            }
+        Object o = map.get(key);
+        if (o == null) {
+            o = defaultValue;
+        }
 
-            if (clazz.isInstance(o)) {
-                return clazz.cast(o);
-            }
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        if (clazz.isInstance(o)) {
+            return clazz.cast(o);
         }
         return null;
     }

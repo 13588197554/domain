@@ -1,6 +1,7 @@
 package com.fly.pojo;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fly.util.Util;
 
 import javax.persistence.Column;
@@ -14,7 +15,7 @@ import java.io.Serializable;
 public class DoubanUser implements Serializable {
 
     @Id
-    private String id;
+    private Integer id;
     private String name;
     @Column(name = "uid")
     private String uid;
@@ -32,17 +33,18 @@ public class DoubanUser implements Serializable {
     private boolean banned;
     @Column(name = "is_suicide")
     private boolean suicide;
+    @JsonProperty("url")
     private String alt;
     @Column(name = "create_time")
     private String creatTime;
     @Column(name = "update_time")
     private String updateTime;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

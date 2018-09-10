@@ -1,9 +1,8 @@
 package com.fly.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -12,10 +11,12 @@ public class BookShortComment implements Serializable {
 
     @Id
     private String id;
+    private String type;
     private String content;
     @Column(name = "book_id")
     private String bookId;
     private String stars;
+    private Integer votes;
     @Column(name = "creator_name")
     private String creatorName;
     @Column(name = "creator_href")
@@ -27,6 +28,9 @@ public class BookShortComment implements Serializable {
     private String createTime;
     @Column(name = "update_time")
     private String updateTime;
+
+    @Transient
+    private DoubanUser author;
 
     public String getId() {
         return id;
@@ -106,6 +110,30 @@ public class BookShortComment implements Serializable {
 
     public void setBookId(String bookId) {
         this.bookId = bookId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Integer getVotes() {
+        return votes;
+    }
+
+    public void setVotes(Integer votes) {
+        this.votes = votes;
+    }
+
+    public DoubanUser getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(DoubanUser author) {
+        this.author = author;
     }
 
     @Override

@@ -52,8 +52,64 @@ public class MovieSpider {
     @Autowired
     private TagObjectDao tod;
 
-    public void start() throws InterruptedException {
+    public void movieTypeSpider() {
+        String baseUrl = "https://api.douban.com/v2/movie/in_theaters";
+        Integer start = 0;
+        Integer count = 100;
 
+        String name = "IN_THEATERS";
+        String pid = "0";
+        String tagType = "DOUBAN_MOVIE";
+
+        TAG_ID = td.findIdByNameAndType(name, tagType);
+        if (TAG_ID == null) {
+            FlyTag tag = new FlyTag();
+            tag.setId(Util.getUUid());
+            tag.setPid(pid);
+            tag.setTagName(name);
+            tag.setTagType(tagType);
+            tag.setStatus(StatusEnum.ACTIVE.getName());
+            tag.setCreateTime(Util.getCurrentSqlTimestamp());
+            tag.setUpdateTime(Util.getCurrentSqlTimestamp());
+            FlyTag newTag = td.save(tag);
+            TAG_ID = newTag.getId();
+        }
+
+        while (true) {
+            try {
+                String url = baseUrl + "?start=" + start + "&count=" + count;
+                Connection connection = Jsoup.connect(url).ignoreContentType(true);
+                connection.userAgent("Mozilla/2.0 (compatible; Ask Jeeves/Teoma; +http://sp.ask.com/docs/about/tech_crawling.html)");
+                Connection.Response res = connection.execute();
+                String body = res.body();
+                List<JSONObject> jsonArr = this.getJsonArray(body);
+                if (jsonArr.size() == 0) {
+                    System.out.println("job has finished!");
+                    break;
+                }
+
+                for (JSONObject jo : jsonArr) {
+                    try {
+                        movieSpider(jo);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        System.out.println(jo);
+                        LogUtil.info(MovieSpider.class, "start", e);
+                    }
+                }
+
+                System.out.println("normally sleeping...!");
+                Util.getRandomSleep(32, 40);
+                start += count;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void start() throws InterruptedException {
         TAG_ID = td.findIdByNameAndType(MOVIE_TAG, TAG_TYPE);
 
         while (true) {
@@ -118,6 +174,7 @@ public class MovieSpider {
             }
             return;
         }
+
         DoubanMovie movie = new DoubanMovie();
         this.movieUnit(jo, movie);
         this.participantUnit(jo, "casts", movie);
