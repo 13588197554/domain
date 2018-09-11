@@ -13,7 +13,7 @@ public class MovieJob implements CommandLineRunner {
     private BookCommentSpider bcs;
 
     @Override
-    public void run(String... args) throws InterruptedException {
-//        bcs.commentSpider();
+    public void run(String... args) {
+        bcs.commentSpider();
     }
 }

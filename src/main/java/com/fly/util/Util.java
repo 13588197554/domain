@@ -139,12 +139,33 @@ public class Util {
         return random.nextInt(end - begin + 1) + begin;
     }
 
-    public static void getRandomSleep(int begin, int end) throws InterruptedException {
-        Thread.sleep(getRandomInt(begin, end) * 1000);
+    public static void getRandomSleep(int begin, int end) {
+        try {
+            Thread.sleep(getRandomInt(begin, end) * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void getRandomSleep(int second) throws InterruptedException {
-        Thread.sleep(second * 1000);
+    public static void getRandomSleep(float begin, float end) {
+        try {
+            int i = getRandomInt(0, 1);
+            if (i == 0) {
+                Thread.sleep((long) (begin * 1000));
+            } else if (i == 1) {
+                Thread.sleep((long) (end * 1000));
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void getRandomSleep(int second) {
+        try {
+            Thread.sleep(second * 1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws ParseException {

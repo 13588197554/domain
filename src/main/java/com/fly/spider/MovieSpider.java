@@ -103,13 +103,11 @@ public class MovieSpider {
                 start += count;
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }
     }
 
-    public void start() throws InterruptedException {
+    public void start() {
         TAG_ID = td.findIdByNameAndType(MOVIE_TAG, TAG_TYPE);
 
         while (true) {

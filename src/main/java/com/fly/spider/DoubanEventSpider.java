@@ -47,7 +47,7 @@ public class DoubanEventSpider {
 
 //    @Async
 //    @Scheduled(fixedDelay = 24 * 3600 * 1000)
-    public void eventSpider() throws InterruptedException {
+    public void eventSpider() {
         String url0 = baseUrl + "?loc=" + locId + "&day_type=" + DAY_TYPE + "&type=" + TYPE;
         int start = 0;
         for (;;) {

@@ -43,7 +43,7 @@ public class BookInfoSpider {
 
     private static String baseUrl = "https://api.douban.com/v2/book/";
 
-    public void start() throws InterruptedException {
+    public void start() {
         while (true) {
             Book book = null;
             Long startTime = Util.getCurrentTimestamp();
