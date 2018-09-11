@@ -14,6 +14,6 @@ public class MovieJob implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws InterruptedException {
-        bcs.commentSpider();
+//        bcs.commentSpider();
     }
 }
