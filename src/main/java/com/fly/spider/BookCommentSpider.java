@@ -44,7 +44,7 @@ public class BookCommentSpider {
     private String baseUrl = "https://api.douban.com/v2/book/";
     private String apikey = "0b2bdeda43b5688921839c8ecb20399b";
 
-    public void commentSpider() throws InterruptedException {
+    public void commentSpider() {
         while (true) {
             Integer start = 0;
             Integer count = 100;
@@ -96,8 +96,10 @@ public class BookCommentSpider {
                     }
 
                     if (404 == hse.getStatusCode()) {
+                        book.setCommentSpider(-2);
+                        bd.save(book);
                         start += count;
-                        continue;
+                        break;
                     }
                 } catch (IOException e) {
                     LogUtil.info(BookCommentSpider.class, "commentSpider", e);
@@ -107,9 +109,6 @@ public class BookCommentSpider {
                     book.setCommentSpider(-2);
                     bd.save(book);
                     e.printStackTrace();
-                } finally {
-                    System.out.println("normally sleeping...!");
-                    Util.getRandomSleep(14, 19);
                 }
             }
         }

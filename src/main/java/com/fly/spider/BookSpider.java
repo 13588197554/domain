@@ -47,7 +47,7 @@ public class BookSpider {
     private static String baseUrl = "https://api.douban.com/v2/book/search?tag=";
     private static String TAG_ID = null;
 
-    public void bookSpider() throws InterruptedException {
+    public void bookSpider() {
         this.initRedis();
 
         while (true) {

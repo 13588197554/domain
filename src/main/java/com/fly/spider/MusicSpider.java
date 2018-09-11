@@ -51,7 +51,7 @@ public class MusicSpider {
     private static String MUSIC_TAG = "MUSIC_TAG";
     private static String MUSIC_TAG_MAP = "MUSIC_TAG_MAP";
 
-    public void musicSpider() throws InterruptedException {
+    public void musicSpider() {
         this.initRedis();
 
         while (true) {
