@@ -33,6 +33,10 @@ public class RedisUtil {
         return redis.opsForList().rightPushAll(key, value);
     }
 
+    public Long rpush(String key, List<String> values) {
+        return redis.opsForList().rightPushAll(key, values);
+    }
+
     public Long rpush(String key, String value) {
         Long count = redis.opsForList().rightPush(key, value);
         return count;

@@ -21,9 +21,9 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
-        factory.setHostName(Arr.getString(prop, "REDIS_HOST"));
-        factory.setPassword(Arr.getString(prop, "REDIS_PASSWORD"));
-        factory.setPort(Arr.getInteger(prop, "REDIS_PORT"));
+        factory.setHostName(Arr.getString(prop, "REDIS_HOST_ALY"));
+        factory.setPassword(Arr.getString(prop, "REDIS_PASSWORD_ALY"));
+        factory.setPort(Arr.getInteger(prop, "REDIS_PORT_ALY"));
         factory.setUsePool(true);
         return factory;
     }
