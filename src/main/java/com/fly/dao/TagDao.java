@@ -14,7 +14,7 @@ import java.util.List;
 public interface TagDao extends JpaRepository<FlyTag, String> {
 
     @Query(value = "SELECT t.id FROM FlyTag t WHERE t.tagName = :tag_name AND t.tagType = :tag_type")
-    String findIdByNameAndType(@Param("tag_name") String movieTag, @Param("tag_type") String tagType);
+    List<String> findIdByNameAndType(@Param("tag_name") String movieTag, @Param("tag_type") String tagType);
 
     @Query(value = "SELECT t.tag_name FROM tag t WHERE t.tag_type = :tag_type AND t.pid != 0", nativeQuery = true)
     List<String> findNameByTypeAndPid(@Param("tag_type") String douban_book);

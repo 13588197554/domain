@@ -25,8 +25,8 @@ import java.util.List;
 /**
  * comment spider :
  *  -1 已经爬取，但是不完整的数据
- *  1 数据已经爬取完整
- *  0 未爬取
+ *   1 数据已经爬取完整
+ *   0 未爬取
  *  -2 出现异常
  * @author david
  * @date 10/09/18 15:35
