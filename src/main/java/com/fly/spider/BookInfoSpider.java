@@ -81,13 +81,6 @@ public class BookInfoSpider {
                 book.setSpider(-1);
                 bd.save(book);
                 continue;
-            } finally {
-                Long endTime = Util.getCurrentTimestamp();
-                Long l = (endTime - startTime) / 1000;
-                Integer second = Integer.valueOf(l.toString());
-                System.out.println("normally sleeping...");
-                Util.getRandomSleep((30 - second), (45 - second));
-                continue;
             }
         }
     }
@@ -95,7 +88,7 @@ public class BookInfoSpider {
     @Transactional
     public void bookInfoSpider(Book book) throws InterruptedException, IOException {
         String id = book.getId();
-        String url = baseUrl + id;
+        String url = baseUrl + id + "?apikey=0b2bdeda43b5688921839c8ecb20399b";
         Connection.Response res = Jsoup.connect(url)
                 .ignoreContentType(true)
                 .userAgent("ia_archiver/8.2 (Windows 7.6; en-US;)")
@@ -124,8 +117,9 @@ public class BookInfoSpider {
         List<JSONObject> tagArr = JSON.parseArray(tagJson, JSONObject.class);
         for (JSONObject tj : tagArr) {
             String tagName = Arr.get(tj, "name", String.class);
-            String tagId = td.findIdByNameAndType(tagName, "DOUBAN_BOOK");
-            if (tagId != null) {
+            List<String> tagIds = td.findIdByNameAndType(tagName, "DOUBAN_BOOK");
+            if (tagIds.size() > 0) {
+                String tagId = tagIds.get(0);
                 List<TagObject> tos = tod.findByFkAndTagId(id, tagId);
                 if (tos.size() > 0) {
                     continue;

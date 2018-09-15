@@ -61,8 +61,9 @@ public class MovieSpider {
         String pid = "0";
         String tagType = "DOUBAN_MOVIE";
 
-        TAG_ID = td.findIdByNameAndType(name, tagType);
-        if (TAG_ID == null) {
+        List<String> tagIds = td.findIdByNameAndType(name, tagType);
+        if (tagIds.size() > 0) {
+            TAG_ID = tagIds.get(0);
             FlyTag tag = new FlyTag();
             tag.setId(Util.getUUid());
             tag.setPid(pid);
@@ -108,7 +109,8 @@ public class MovieSpider {
     }
 
     public void start() {
-        TAG_ID = td.findIdByNameAndType(MOVIE_TAG, TAG_TYPE);
+        List<String> tagIds = td.findIdByNameAndType(MOVIE_TAG, TAG_TYPE);
+        TAG_ID = tagIds.get(0);
 
         while (true) {
             String url = baseUrl + "?tag=" + MOVIE_TAG + "&start=" + PAGE * COUNT;
