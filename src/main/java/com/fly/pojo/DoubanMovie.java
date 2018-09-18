@@ -29,24 +29,41 @@ public class DoubanMovie {
     @Column(name = "wish_count")
     @JsonProperty("wish_count")
     private Integer wishCount; // 想看人数
+    @Column(name = "do_count")
+    @JsonProperty("do_count")
+    private Integer doCount;
     @Column(name = "episodes_count")
     @JsonProperty("episodes_count")
     private Integer episodesCount;
+    @Column(name = "comments_count")
+    @JsonProperty("comments_count")
+    private Integer commentsCount;
     @Column(name = "mainland_pubdate")
     @JsonProperty("mainland_pubdate")
     private String mainlandPubdate; // 大陆上映日期
+    @Column(columnDefinition = "TEXT")
+    private String pubdate;
     private String type; // 电影类型，按照豆瓣分类
     @Column(name = "collect_count")
     @JsonProperty("collect_count")
     private Integer collectCount; // 收集人数
+    @Column(name = "season_count")
+    @JsonProperty("season_count")
+    private Integer seasonCount;
+    @Column(name = "ratings_count")
+    @JsonProperty("ratings_count")
+    private Integer ratingsCount;
     @Column(name = "original_title")
     @JsonPropertyOrder("original_title")
     private String originalTitle; // 原名
+    @Column(columnDefinition = "TEXT")
+    private String durations;
     private String subtype; // 条目分类
     private Integer year;
     private String alt; // 电影豆瓣url
     private String aka; // 别名 json
     private String countries; // 制片国家 json
+    private String extra;
     private String status = StatusEnum.ACTIVE.getName();
     @Column(name = "create_time")
     private String createTime = Util.getCurrentFormatTime();
@@ -254,9 +271,65 @@ public class DoubanMovie {
         this.countries = countries;
     }
 
+    public Integer getDoCount() {
+        return doCount;
+    }
+
+    public void setDoCount(Integer doCount) {
+        this.doCount = doCount;
+    }
+
+    public Integer getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(Integer commentsCount) {
+        this.commentsCount = commentsCount;
+    }
+
+    public Integer getSeasonCount() {
+        return seasonCount;
+    }
+
+    public void setSeasonCount(Integer seasonCount) {
+        this.seasonCount = seasonCount;
+    }
+
+    public Integer getRatingsCount() {
+        return ratingsCount;
+    }
+
+    public void setRatingsCount(Integer ratingsCount) {
+        this.ratingsCount = ratingsCount;
+    }
+
+    public String getExtra() {
+        return extra;
+    }
+
+    public void setExtra(String extra) {
+        this.extra = extra;
+    }
+
+    public String getDurations() {
+        return durations;
+    }
+
+    public void setDurations(String durations) {
+        this.durations = durations;
+    }
+
+    public String getPubdate() {
+        return pubdate;
+    }
+
+    public void setPubdate(String pubdate) {
+        this.pubdate = pubdate;
+    }
+
     @Override
     public String toString() {
-        return "{" +
+        return "DoubanMovie{" +
                 "id='" + id + '\'' +
                 ", average=" + average +
                 ", stars='" + stars + '\'' +
@@ -264,14 +337,23 @@ public class DoubanMovie {
                 ", summary='" + summary + '\'' +
                 ", reviewsCount=" + reviewsCount +
                 ", wishCount=" + wishCount +
+                ", doCount=" + doCount +
                 ", episodesCount=" + episodesCount +
+                ", commentsCount=" + commentsCount +
                 ", mainlandPubdate='" + mainlandPubdate + '\'' +
                 ", type='" + type + '\'' +
                 ", collectCount=" + collectCount +
+                ", seasonCount=" + seasonCount +
+                ", ratingsCount=" + ratingsCount +
                 ", originalTitle='" + originalTitle + '\'' +
                 ", subtype='" + subtype + '\'' +
                 ", year=" + year +
                 ", alt='" + alt + '\'' +
+                ", aka='" + aka + '\'' +
+                ", countries='" + countries + '\'' +
+                ", durations='" + durations + '\'' +
+                ", pubdate='" + pubdate + '\'' +
+                ", extra='" + extra + '\'' +
                 ", status='" + status + '\'' +
                 ", createTime='" + createTime + '\'' +
                 ", updateTime='" + updateTime + '\'' +
