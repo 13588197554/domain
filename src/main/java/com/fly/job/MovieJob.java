@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 public class MovieJob implements CommandLineRunner {
 
     @Autowired
-    private MovieCommentSpider mcs;
+    private MovieReviewSpider mrs;
 
     @Override
     public void run(String... args) {
-        mcs.start();
+        mrs.start();
     }
 }

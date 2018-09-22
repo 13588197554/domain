@@ -24,10 +24,7 @@ public class Arr {
 
     public static <T> T get(Map map, String key, Class<T> clazz) {
         Object o = map.get(key);
-        if (clazz.isInstance(o)) {
-            return clazz.cast(o);
-        }
-        return null;
+        return clazz.cast(o);
     }
 
     public static <T> T get(Map map, String key, Object defaultValue, Class<T> clazz) {
