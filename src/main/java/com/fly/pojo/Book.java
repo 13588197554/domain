@@ -1,52 +1,73 @@
 package com.fly.pojo;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.ToString;
+
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "douban_book")
+@JsonIgnoreProperties({"author", "translator", "extra", "createTime", "updateTime", "status"})
+@ToString
 public class Book implements Serializable {
 
     @Id
     private String id;
     private String name;
     @Column(name = "tag_id")
+    @JsonProperty("tag_id")
     private String tagId;
+    private String category;
     private String author;
     private String publisher;
     @Column(name = "origin_work_name")
+    @JsonProperty("origin_title")
     private String originWorkName;
     private String translator;
-    @Column(columnDefinition = "TEXT")
-    private String category;
     @Column(name = "publish_time")
+    @JsonProperty("publish_time")
     private String publishTime;
     @Column(name = "page_count")
+    @JsonProperty("page_count")
     private String pageCount;
     private String binding;
     private String price;
     @Column(name = "image_url")
+    @JsonProperty("image_url")
     private String imageUrl;
     private String stars;
     private String intro;
-    @Column(columnDefinition = "TEXT")
     private String extra;
     private String status;
-    @Column(name = "create_time")
+    @Column(name = "comments_count")
+    @JsonProperty("comments_count")
+    private Integer commentsCount;
+    @Column(name = "reviews_count")
+    @JsonProperty("reviews_count")
+    private Integer reviewsCount;
+    @Column(name = "create_time", length = 24)
     private String createTime;
-    @Column(name = "update_time")
+    @Column(name = "update_time", length = 24)
     private String updateTime;
 
-    private int spider;
-    @Column(name = "comment_spider")
-    private int commentSpider = 0;
+    @Transient
+    private FlyTag tag;
+    @Transient
+    private List<String> authors;
+    @Transient
+    private List<String> translators;
+    @Transient
+    @JsonProperty("comment_count")
+    private Long commentCount = 0L;
+    @Transient
+    private List<BookShortComment> comments;
 
-//    @ManyToOne(fetch = FetchType.LAZY, targetEntity = FlyTag.class)
-//    @Transient
-//    private FlyTag tag;
+    private Integer spider;
+    @Column(name = "comment_spider")
+    private Integer commentSpider;
 
     public String getId() {
         return id;
@@ -192,12 +213,76 @@ public class Book implements Serializable {
         this.extra = extra;
     }
 
-    public int getSpider() {
+    public FlyTag getTag() {
+        return tag;
+    }
+
+    public void setTag(FlyTag tag) {
+        this.tag = tag;
+    }
+
+    public List<BookShortComment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<BookShortComment> comments) {
+        this.comments = comments;
+    }
+
+    public List<String> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public List<String> getTranslators() {
+        return translators;
+    }
+
+    public void setTranslators(List<String> translators) {
+        this.translators = translators;
+    }
+
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Integer getCommentsCount() {
+        return commentsCount;
+    }
+
+    public void setCommentsCount(Integer commentsCount) {
+        this.commentsCount = commentsCount;
+    }
+
+    public Integer getReviewsCount() {
+        return reviewsCount;
+    }
+
+    public void setReviewsCount(Integer reviewsCount) {
+        this.reviewsCount = reviewsCount;
+    }
+
+    public Integer getSpider() {
         return spider;
     }
 
-    public void setSpider(int spider) {
+    public void setSpider(Integer spider) {
         this.spider = spider;
+    }
+
+    public Integer getCommentSpider() {
+        return commentSpider;
+    }
+
+    public void setCommentSpider(Integer commentSpider) {
+        this.commentSpider = commentSpider;
     }
 
     public String getCategory() {
@@ -206,38 +291,5 @@ public class Book implements Serializable {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public int getCommentSpider() {
-        return commentSpider;
-    }
-
-    public void setCommentSpider(int commentSpider) {
-        this.commentSpider = commentSpider;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "id=\"" + id + "\"" +
-                ", name=\"" + name + "\"" +
-                ", author=\"" + author + "\"" +
-                ", publisher=\"" + publisher + "\"" +
-                ", originWorkName=\"" + originWorkName + "\"" +
-                ", translator=\"" + translator + "\"" +
-                ", publishTime=\"" + publishTime + "\"" +
-                ", pageCount=\"" + pageCount + "\"" +
-                ", imageUrl=\"" + imageUrl + "\"" +
-                ", category=\"" + category + "\"" +
-                ", tagId=\"" + tagId + "\"" +
-                ", binding=\"" + binding + "\"" +
-                ", price=\"" + price + "\"" +
-                ", stars=\"" + stars + "\"" +
-                ", intro=\"" + intro + "\"" +
-                ", extra=\"" + extra + "\"" +
-                ", status=\"" + status + "\"" +
-                ", createTime=\"" + createTime + "\"" +
-                ", updateTime=\"" + updateTime + "\"" +
-                '}';
     }
 }

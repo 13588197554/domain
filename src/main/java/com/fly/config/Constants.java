@@ -12,4 +12,10 @@ public class Constants {
 
     public static final String MOVIE_KEY = "MOVIE_JOB";
 
+    public static final String BASE_BOOK_URL = "https://api.douban.com/v2/book/";
+
+    public static final String BOOK_KEY = "BOOK_KEY";
+
+    public static final String BOOK_EXP_KEY = "BOOK_EXP_KEY";
+
 }
