@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +32,6 @@ import static com.fly.config.Constants.*;
 @Component
 @Slf4j
 public class MovieReviewSpider {
-
-    private final Logger logger = LoggerFactory.getLogger(MovieReviewSpider.class);
 
     @Autowired
     private RedisUtil jedis;
@@ -56,7 +52,7 @@ public class MovieReviewSpider {
             while (true) {
                 try {
                     String url = BASE_MOVIE_URL + id + "/reviews?apikey=" + API_KEY + "&count=100&start=" + start;
-                    logger.info("processing url : " + url + ", process time: " + Util.getCurrentFormatTime());
+                    log.info("processing url : " + url + ", process time: " + Util.getCurrentFormatTime());
                     Connection.Response res = Jsoup.connect(url)
                             .ignoreContentType(true)
                             .userAgent("findlinks/1.1-a7 (+http://wortschatz.uni-leipzig.de/findlinks/)")
@@ -64,7 +60,7 @@ public class MovieReviewSpider {
                     String body = res.body();
                     List<JSONObject> joArr = this.getJsonArray(body);
                     if (joArr.size() == 0) {
-                        logger.info(id + "'s reviews has finished!");
+                        log.info(id + "'s reviews has finished!");
                         break;
                     }
 

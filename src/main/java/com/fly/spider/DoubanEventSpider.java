@@ -11,6 +11,7 @@ import com.fly.pojo.DoubanUser;
 import com.fly.util.Arr;
 import com.fly.util.LogUtil;
 import com.fly.util.Util;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -21,11 +22,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static com.fly.config.Constants.API_KEY;
+
 /**
  * @author david
  * @date 19/07/18 20:24
  */
 @Component
+@Slf4j
 public class DoubanEventSpider {
 
     @Autowired
@@ -38,7 +42,7 @@ public class DoubanEventSpider {
     private DistrictDao dd;
 
     private static String baseUrl = "https://api.douban.com/v2/event/list";
-    private static int count = 20;
+    private static int count = 100;
     private static String TYPE = "all";
     private static String DAY_TYPE = "future";
     private static String reg1 = "<(.*?)>";
@@ -48,13 +52,12 @@ public class DoubanEventSpider {
 //    @Async
 //    @Scheduled(fixedDelay = 24 * 3600 * 1000)
     public void eventSpider() {
-        String url0 = baseUrl + "?loc=" + locId + "&day_type=" + DAY_TYPE + "&type=" + TYPE;
+        String url0 = baseUrl + "?loc=" + locId + "&day_type=" + DAY_TYPE + "&type=" + TYPE + "&apikey=" + API_KEY;
         int start = 0;
         for (;;) {
             try {
-                long startTime = Util.getCurrentTimestamp();
                 String url = url0 + "&start=" + start * count;
-                System.out.println("-- processing url: " + url + ", -- process time: " + Util.getCurrentFormatTime());
+                log.info("-- processing url: " + url + ", -- process time: " + Util.getCurrentFormatTime());
                 Connection connection = Jsoup.connect(url).ignoreContentType(true);
                 connection.userAgent("Mozilla/2.0 (compatible; Ask Jeeves/Teoma; +http://sp.ask.com/docs/about/tech_crawling.html)");
                 Connection.Response res = connection.execute();
@@ -78,13 +81,7 @@ public class DoubanEventSpider {
                     ed.save(event);
                 }
 
-                long endTime = Util.getCurrentTimestamp();
-                if ((endTime - startTime) <= 30 * 1000) {
-                    System.out.println("normally sleeping");
-                    Util.getRandomSleep(28, 32);
-                }
-                Util.getRandomSleep(1, 3);
-                start += 20;
+                start += count;
             } catch (HttpStatusException he) {
                 LogUtil.info(DoubanEventSpider.class, "eventSpider", he);
                 he.printStackTrace();

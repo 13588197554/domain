@@ -1,6 +1,6 @@
 package com.fly.job;
 
-import com.fly.spider.*;
+import com.fly.spider.BookInfoSpider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;

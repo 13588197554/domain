@@ -1,7 +1,5 @@
 package com.fly.pojo;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
 import java.io.Serializable;
 
