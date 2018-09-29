@@ -85,12 +85,16 @@ public class MovieReviewSpider {
                         Util.getRandomSleep(3 * 3600);
                     }
 
-                    if (404 == hse.getStatusCode()) {
-                    }
-
                     break;
                 } catch (IOException e) {
                     e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    List<String> list = jedis.lrange(MOVIE_EXP_KEY, 0, -1);
+                    if (!list.contains(id)) {
+                        jedis.rpush(MOVIE_EXP_KEY, id);
+                    }
+                    break;
                 }
             }
         }

@@ -6,13 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MovieJob implements CommandLineRunner {
+public class SpiderJob implements CommandLineRunner {
 
     @Autowired
-    private MovieReviewSpider mrs;
+    private BookInfoSpider mis;
 
     @Override
     public void run(String... args) {
-        mrs.start();
+        mis.start();
     }
 }

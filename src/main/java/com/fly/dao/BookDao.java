@@ -3,7 +3,8 @@ package com.fly.dao;
 import com.fly.pojo.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @author david
@@ -21,4 +22,7 @@ public interface BookDao extends JpaRepository<Book, String> {
     @Query(nativeQuery = true,
             value = "select * from douban_book where comment_spider = 0 order by id DESC limit 1")
     Book findFirstByCommentSpider();
+
+    @Query("select b.id from Book b where b.spider = 1")
+    List<String> findIds();
 }

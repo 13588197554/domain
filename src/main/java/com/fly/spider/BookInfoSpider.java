@@ -12,6 +12,7 @@ import com.fly.pojo.DoubanImage;
 import com.fly.pojo.TagObject;
 import com.fly.util.Arr;
 import com.fly.util.LogUtil;
+import com.fly.util.RedisUtil;
 import com.fly.util.Util;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
@@ -22,6 +23,10 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
+import static com.fly.config.Constants.BOOK_INFO_KEY;
+import static com.fly.config.Constants.EXP_BOOK_INFO_KEY;
 
 /**
  * spider :
@@ -40,25 +45,30 @@ public class BookInfoSpider {
     private TagObjectDao tod;
     @Autowired
     private ImageDao imageDao;
+    @Autowired
+    private RedisUtil jedis;
 
     private static String baseUrl = "https://api.douban.com/v2/book/";
 
     public void start() {
-        while (true) {
-            Book book = null;
-            Long startTime = Util.getCurrentTimestamp();
+        initRedis();
+
+        while (jedis.exists(BOOK_INFO_KEY)) {
+            String id = jedis.lpop(BOOK_INFO_KEY);
+            Optional<Book> op = bd.findById(id);
+            if (!op.isPresent()) {
+                continue;
+            }
+
+            Book book = op.get();
+            System.out.println("process book : " + book.getId() + " process time : " + Util.getCurrentFormatTime());
             try {
-                book = bd.findFirstInfoSpider();
-                if (book == null) {
-                    System.out.println("job has finished!");
-                    break;
-                }
-                System.out.println("process book : " + book.getId() + " process time : " + Util.getCurrentFormatTime());
                 this.bookInfoSpider(book);
             } catch (HttpStatusException hse) {
                 LogUtil.info(BookInfoSpider.class, "bookInfoSpider", hse);
                 if (hse.getStatusCode() == 403) {
                     Util.getRandomSleep(3 * 3600);
+
                     continue;
                 }
 
@@ -72,12 +82,9 @@ public class BookInfoSpider {
                     continue;
                 }
 
-            } catch (IOException e) {
-                LogUtil.info(BookInfoSpider.class, "bookInfoSpider", e);
-                e.printStackTrace();
-                continue;
             } catch (Exception e) {
                 LogUtil.info(BookInfoSpider.class, "bookInfoSpider", e);
+                jedis.rpush(EXP_BOOK_INFO_KEY, id);
                 book.setSpider(-1);
                 bd.save(book);
                 continue;
@@ -138,6 +145,13 @@ public class BookInfoSpider {
 
         book.setSpider(2);
         bd.save(book);
+    }
+
+    private void initRedis() {
+        if (!jedis.exists(BOOK_INFO_KEY)) {
+            List<String> bookIds = bd.findIds();
+            jedis.rpush(BOOK_INFO_KEY, bookIds);
+        }
     }
 
 }

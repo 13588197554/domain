@@ -12,4 +12,10 @@ public class Constants {
 
     public static final String MOVIE_KEY = "MOVIE_JOB";
 
+    public static final String MOVIE_EXP_KEY = "MOVIE_EXP_KEY";
+
+    public static final String BOOK_INFO_KEY = "BOOK_INFO_KEY";
+
+    public static final String EXP_BOOK_INFO_KEY = "EXP_BOOK_INFO_KEY";
+
 }
