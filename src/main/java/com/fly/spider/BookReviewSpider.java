@@ -166,8 +166,8 @@ public class BookReviewSpider {
 
     private void initRedis() {
         if (!jedis.exists(BOOK_KEY)) {
-            List<String> bookIds = bd.findAllIds();
-            jedis.rpush(BOOK_KEY, bookIds);
+//            List<String> bookIds = bd.findAllIds();
+//            jedis.rpush(BOOK_KEY, bookIds);
         }
     }
 

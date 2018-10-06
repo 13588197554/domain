@@ -11,7 +11,9 @@ import com.fly.pojo.BookShortComment;
 import com.fly.pojo.DoubanUser;
 import com.fly.util.Arr;
 import com.fly.util.LogUtil;
+import com.fly.util.RedisUtil;
 import com.fly.util.Util;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -19,8 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
+import static com.fly.config.Constants.*;
 
 /**
  * comment spider :
@@ -32,6 +36,7 @@ import java.util.List;
  * @date 10/09/18 15:35
  */
 @Component
+@Slf4j
 public class BookCommentSpider {
 
     @Autowired
@@ -40,30 +45,31 @@ public class BookCommentSpider {
     private BookCommentDao bcd;
     @Autowired
     private UserDao ud;
+    @Autowired
+    private RedisUtil jedis;
 
     private String baseUrl = "https://api.douban.com/v2/book/";
-    private String apikey = "0b2bdeda43b5688921839c8ecb20399b";
 
     public void commentSpider() {
-        while (true) {
+        initRedis();
+
+        while (jedis.exists(BOOK_COMMENT_KEY)) {
             Integer start = 0;
             Integer count = 100;
-            Book book = bd.findFirstByCommentSpider();
-            if (book == null) {
-                System.out.println("job has finished!");
-                break;
-            }
-
-            Long l = bcd.countByBookId(book.getId());
-            if (l > 0) { // 已经爬取的暂时不处理
-                book.setCommentSpider(-1);
-                bd.save(book);
+            String id = jedis.lpop(BOOK_COMMENT_KEY);
+            Optional<Book> op = bd.findById(id);
+            if (!op.isPresent()) {
+                log.info(id + "'s not exist!");
                 continue;
             }
 
+            Book book = op.get();
             while (true) {
                 try {
-                    String url = baseUrl + book.getId() + "/comments?apikey=" + apikey + "&start=" + start;
+                    String url = baseUrl + book.getId() +
+                            "/comments?apikey=" + API_KEY +
+                            "&start=" + start +
+                            "&count=" + count;
                     Connection conn = Jsoup.connect(url)
                             .ignoreContentType(true)
                             .userAgent("polybot 1.0 (http://cis.poly.edu/polybot/)");
@@ -72,8 +78,11 @@ public class BookCommentSpider {
                     List<JSONObject> joArr = this.getJsonArray(body);
 
                     if (joArr.size() == 0) {
-                        System.out.println("book : " + book.getName() + " comment has finished!");
-                        book.setCommentSpider(1);
+                        log.info("book: " + book.getName() + " comment has finished! ");
+                        JSONObject jo = JSON.parseObject(body);
+                        String total = Arr.get(jo, "total");
+                        book.setCommentsCount(Integer.valueOf(total));
+                        book.setCommentSpider(2);
                         bd.save(book);
                         break;
                     }
@@ -96,26 +105,20 @@ public class BookCommentSpider {
                     }
 
                     if (404 == hse.getStatusCode()) {
-                        book.setCommentSpider(-2);
-                        bd.save(book);
-                        start += count;
+                        jedis.rpush(EXP_BOOK_COMMENT_KEY, id);
                         break;
                     }
-                } catch (IOException e) {
-                    LogUtil.info(BookCommentSpider.class, "commentSpider", e);
-                    e.printStackTrace();
                 } catch (Exception e) {
-                    LogUtil.info(BookCommentSpider.class, "commentSpider", e);
-                    book.setCommentSpider(-2);
-                    bd.save(book);
                     e.printStackTrace();
+                    jedis.rpush(EXP_BOOK_COMMENT_KEY, id);
+                    break;
                 }
             }
         }
     }
 
     @Transactional
-    private Book handleCommentInfo(Book book, JSONObject jo) {
+    public Book handleCommentInfo(Book book, JSONObject jo) {
         BookShortComment comment = new BookShortComment();
         comment.setId(String.valueOf((Arr.get(jo, "id"))));
         comment.setVotes(Arr.get(jo, "votes", 0, Integer.class));
@@ -150,6 +153,13 @@ public class BookCommentSpider {
         String subJson = Arr.get(jsonObject, "comments");
         List<JSONObject> array = JSON.parseArray(subJson, JSONObject.class);
         return array;
+    }
+
+    private void initRedis() {
+        if (!jedis.exists(BOOK_COMMENT_KEY)) {
+            List<String> ids = bd.findIdsByCondition();
+            jedis.rpush(BOOK_COMMENT_KEY, ids);
+        }
     }
 
 }

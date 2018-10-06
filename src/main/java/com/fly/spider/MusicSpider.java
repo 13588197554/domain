@@ -15,7 +15,6 @@ import com.fly.util.Arr;
 import com.fly.util.LogUtil;
 import com.fly.util.RedisUtil;
 import com.fly.util.Util;
-import com.google.gson.JsonObject;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -147,7 +146,7 @@ public class MusicSpider {
     }
 
     @Transactional
-    private void spider(JSONObject jo) {
+    public void spider(JSONObject jo) {
         DoubanMusic music = this.musicUnit(jo);
         this.tagUnit(jo, music);
     }
@@ -212,7 +211,7 @@ public class MusicSpider {
     }
 
     @Transactional
-    private void saveTag(FlyTag tag, String name, String pid) {
+    public void saveTag(FlyTag tag, String name, String pid) {
         tag.setId(Util.getUUid());
         tag.setPid(pid);
         tag.setTagName(name);

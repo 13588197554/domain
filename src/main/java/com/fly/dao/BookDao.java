@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-import java.util.List;
-
 /**
  * @author david
  * @date 01/08/18 13:53
@@ -27,4 +25,9 @@ public interface BookDao extends JpaRepository<Book, String> {
 
     @Query("select b.id from Book b where b.spider = 1")
     List<String> findIds();
+
+    @Query("select bc.id from Book bc where bc.commentSpider = 1")
+    List<String> findIdsByCondition();
+
+//    List<String> findAllIds();
 }

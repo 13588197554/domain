@@ -60,9 +60,6 @@ public class Book implements Serializable {
     @Transient
     private List<String> translators;
     @Transient
-    @JsonProperty("comment_count")
-    private Long commentCount = 0L;
-    @Transient
     private List<BookShortComment> comments;
 
     private Integer spider;
@@ -243,14 +240,6 @@ public class Book implements Serializable {
 
     public void setTranslators(List<String> translators) {
         this.translators = translators;
-    }
-
-    public Long getCommentCount() {
-        return commentCount;
-    }
-
-    public void setCommentCount(Long commentCount) {
-        this.commentCount = commentCount;
     }
 
     public Integer getCommentsCount() {

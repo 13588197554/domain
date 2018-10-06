@@ -24,4 +24,8 @@ public class Constants {
 
     public static final String BOOK_EXP_KEY = "BOOK_EXP_KEY";
 
+    public static final String BOOK_COMMENT_KEY = "BOOK_COMMENT_KEY";
+
+    public static final String EXP_BOOK_COMMENT_KEY = "EXP_BOOK_COMMENT_KEY";
+
 }
